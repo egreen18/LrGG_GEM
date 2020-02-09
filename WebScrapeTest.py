@@ -7,7 +7,9 @@ print(mets[0])
 #Test to understand how to scrape data from BiGG
 import requests
 from bs4 import BeautifulSoup as bs
-URL="http://bigg.ucsd.edu/universal/metabolites/atp"
+URLbase="http://bigg.ucsd.edu/universal/metabolites/"
+URLopt=mets[0]
+URL=URLbase+URLopt
 webpage=requests.get(URL)
 webcontent = webpage.content
 htmlcontent = bs(webcontent, "html.parser")
