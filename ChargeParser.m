@@ -36,7 +36,7 @@ for i = start:length(chargestr)
         newcharge = input("Please choose the appropriate charge:");
         chargestr{i} = num2str(newcharge);
         start = i;
-        save ChargeInt.mat
+        save ChargeInt.mat %Saving progress. Please push this to git if you make valuable progress.
         clc
     end
 end
