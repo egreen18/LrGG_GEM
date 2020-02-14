@@ -8,3 +8,7 @@ for i = 1:length(model.mets)
     str = split(model.mets(i),"[");
     mets(i) = str(1);
 end
+
+%Method using regexp
+
+%mets = regexprep(model.mets, '\[\w*\]', '')
