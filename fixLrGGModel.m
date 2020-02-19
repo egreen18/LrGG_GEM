@@ -1,6 +1,7 @@
 %Ethan Green
 %February 14th, 2020
 %Attempting to fix the LrGG Model
+
 %% Loading in relevant data
 clear
 load MetParsed.mat 
@@ -17,6 +18,7 @@ disp(length(model.genes)+" genes,")
 %Number of transport reactions 
 %disp(length(model.
 %Number of extracellular metabolites
+
 %% Fixing metCharges, metFormulas, and mets
 [yn, id] = ismember(mets, BiGGmetData(:, 2));
 model.metCharges(yn, 1) = str2double(BiGGmetData(id(yn), 7));
@@ -25,7 +27,8 @@ model.metFormulas(yn, 1) = BiGGmetData(id(yn), 6);
 [yn, id] = ismember(mets, BiGGmetData(:, 2));
 model.mets(yn, 1) = BiGGmetData(id(yn), 1);
 disp("The model's Charges, metabolite names and formulas were standardized using the BiGG Database.")
-%% Removing R and X groups
+
+%% Classifying R and X group containing formulae as unknowns
 %getElementalComposition creates to matrices, elements lists all of the
 %elements in the metabolite(s) examined and metEle lists the number of
 %elements seen in the metabaolite(s) referencing the elements vector
