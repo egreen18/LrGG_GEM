@@ -8,7 +8,6 @@
 load MetParsed.mat 
 load BiGGmetData_01_04_2017.mat
 load LrGG_Model.mat
-modelorigin = model;
 
 %% Pullling data and exporting to LrGG Model
 [yn, id] = ismember(mets, BiGGmetData(:, 2));
