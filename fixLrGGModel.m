@@ -22,10 +22,8 @@ disp(length(model.genes)+" genes,")
 %% Fixing metCharges, metFormulas, and mets
 [yn, id] = ismember(mets, BiGGmetData(:, 2));
 model.metCharges(yn, 1) = str2double(BiGGmetData(id(yn), 7));
-[yn, id] = ismember(mets, BiGGmetData(:, 2));
 model.metFormulas(yn, 1) = BiGGmetData(id(yn), 6);
-[yn, id] = ismember(mets, BiGGmetData(:, 2));
-model.mets(yn, 1) = BiGGmetData(id(yn), 1);
+model.mets = regexprep(model.mets, '\[C_(\w)\]','\[$1\]');
 disp("The model's Charges, metabolite names and formulas were standardized using the BiGG Database.")
 
 %% Classifying R and X group containing formulae as unknowns
@@ -38,5 +36,39 @@ disp("The model's Charges, metabolite names and formulas were standardized using
 genEle = ismember(elements, {'R', 'X'});
 %Removing all metFormulas identified to have R
 l = length(model.metFormulas(any(metEle(:, genEle), 2)));
-disp(l+" metabolites with R or X groups had their formulae removed from the model.")
+disp(l+" metabolites were identified with R or X in their formula.")
 model.metFormulas(any(metEle(:, genEle), 2)) = {''};
+
+%% Filling metabolites
+[model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
+rxnEx = sum(model.S ~= 0, 1) <= 1;
+rxnActive = model.lb ~= 0 | model.ub ~= 0;
+rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
+
+% automatically fill missing protons and H2O
+hc = findMetIDs(model, 'h[c]');
+h2o = findMetIDs(model, 'h2o[c]');
+[metEleFill, elementsFill] = getElementalComposition({'HCharge1', 'H2O'}, elements);
+metComp = regexp(model.mets, '\[\w\]$', 'match', 'once');
+acceptAutoCorrect = false(numel(model.rxns), 1);
+for j = 1:numel(model.rxns)
+    % if automatic filling suggested
+    if any(S_fill(:, j))
+        % check whether it perfectly resolves the imbalance
+        if all(abs(metEleFill' * S_fill(:, j) + metEle' * model.S(:, j)) < 1e-5)
+            if all(strcmp(metComp(model.S(:, j) ~= 0), '[c]'))  % this is currently trivial since the model is not compartmentalized
+                % accept
+                acceptAutoCorrect(j) = true;
+                model.S([hc; h2o], j) = model.S([hc; h2o], j) + S_fill(:, j);
+            end
+        end
+    end
+end
+
+%% Balance check
+[model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
+rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
+% check unbalanced reactions
+printImbalance(model2, rxnImbal(1), 0, rxnBal, elements, metEle)
+disp(length(rxnImbal)+" reactions were found to be imbalanced.")
+
