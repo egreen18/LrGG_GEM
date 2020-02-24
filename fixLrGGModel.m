@@ -39,12 +39,15 @@ l = length(model.metFormulas(any(metEle(:, genEle), 2)));
 disp(l+" metabolites were identified with R or X in their formula.")
 model.metFormulas(any(metEle(:, genEle), 2)) = {''};
 
-%% Filling metabolites
+%% Balance check after autocorrect
 [model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
 rxnEx = sum(model.S ~= 0, 1) <= 1;
 rxnActive = model.lb ~= 0 | model.ub ~= 0;
 rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
+% check unbalanced reactions
+disp(length(rxnImbal)+" reactions were found to be imbalanced.")
 
+%% Filling metabolites
 % automatically fill missing protons and H2O
 hc = findMetIDs(model, 'h[c]');
 h2o = findMetIDs(model, 'h2o[c]');
@@ -65,10 +68,33 @@ for j = 1:numel(model.rxns)
     end
 end
 
-%% Balance check
+%% Balance check after autocorrect
 [model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
 rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
 % check unbalanced reactions
-printImbalance(model2, rxnImbal(1), 0, rxnBal, elements, metEle)
-disp(length(rxnImbal)+" reactions were found to be imbalanced.")
+disp(length(rxnImbal)+" reactions were found to be imbalanced after automatic intervention.")
 
+%% Manually Solving Imbalances
+model.S(20,207) = -1; %Reaction 207
+model.metCharges(538) = -1; %Reactions 258, 991
+model.S(20,361) = -1; %Reaction 361
+    model.metFormulas(437) = {'C50H72O2'};
+    model.metFormulas(434) = {'C50H74O2'};
+model.metFormulas(459) = {'C20H38O1Conserve_j'}; %Reaction 436
+model.metCharges(678) = -1; %Reaction 437
+    model.metCharges(679) = -1;
+    model.metCharges(680) = -1;
+    model.metCharges(681) = -1;
+model.metCharges(764) = -1; %Reaction 549
+    model.metCharges(1018) = -1;
+model.metCharges(676) = -1; %Reactions 987, 1033
+    model.metCharges(949) = 0;
+    model.S(20,1033) = -14;
+model.S(20,1216) = 2; %Reaction 1216
+
+%% Balance check afet manual correction
+[model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
+rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
+% check unbalanced reactions
+printImbalance(model, rxnImbal(1), 0, rxnBal, elements, metEle)
+disp(length(rxnImbal)+" reactions were found to be imbalanced after manual intervention.")
