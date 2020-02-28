@@ -78,8 +78,8 @@ disp(length(rxnImbal)+" reactions were found to be imbalanced after automatic in
 model.S(20,207) = -1; %Reaction 207
 model.metCharges(538) = -1; %Reactions 258, 991
 model.S(20,361) = -1; %Reaction 361
-    model.metFormulas(437) = {'C50H72O2'};
-    model.metFormulas(434) = {'C50H74O2'};
+    model.S(437,361) = 0;
+    model.S(434,361) = 1;
 model.metFormulas(459) = {'C20H38O1Conserve_j'}; %Reaction 436
 model.metCharges(678) = -1; %Reaction 437
     model.metCharges(679) = -1;
@@ -92,7 +92,7 @@ model.metCharges(676) = -1; %Reactions 987, 1033
     model.S(20,1033) = -14;
 model.S(20,1216) = 2; %Reaction 1216
 
-%% Balance check afet manual correction
+%% Balance check manual correction
 [model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
 rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
 % check unbalanced reactions
