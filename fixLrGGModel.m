@@ -16,9 +16,10 @@ disp(length(model.mets)+" metabolites,")
 %Number of genes 
 disp(length(model.genes)+" genes,")
 %Number of transport reactions 
-%disp(length(model.
+rxnEx = sum(model.S ~= 0, 1) <= 1;
+disp(sum(rxnEx == 1)+" transport reactions,")
 %Number of extracellular metabolites
-
+%disp("and "+...+" extracellular metbolites.")
 %% Fixing metCharges, metFormulas, and mets
 [yn, id] = ismember(mets, BiGGmetData(:, 2));
 model.metCharges(yn, 1) = str2double(BiGGmetData(id(yn), 7));
