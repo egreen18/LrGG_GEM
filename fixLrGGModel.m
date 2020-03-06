@@ -27,6 +27,11 @@ model.metFormulas(yn, 1) = BiGGmetData(id(yn), 6);
 model.mets = regexprep(model.mets, '\[C_(\w)\]','\[$1\]');
 disp("The model's Charges, metabolite names and formulas were standardized using the BiGG Database.")
 
+%% Intervention - adding biomass metabolite
+model = addMetabolite(model,'bio[c]','metFormula','','Charge',0.78071,'metName','Biomass');
+model = addMetabolite(model,'bio[e]','metFormula','','Charge',0.78071,'metName','Biomass');
+model = addReaction(model,'bio_ex','reactionFormula','bio[c] -> bio[e]','reactionName','Cell Division');
+model.S(1026,1456) = 1;
 %% Classifying R and X group containing formulae as unknowns
 %getElementalComposition creates to matrices, elements lists all of the
 %elements in the metabolite(s) examined and metEle lists the number of
@@ -97,5 +102,9 @@ model.S(20,1216) = 2; %Reaction 1216
 [model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
 rxnImbal = model.rxns(any(abs(rxnBal) > 1e-4, 1) & ~rxnEx & rxnActive');
 % check unbalanced reactions
-printImbalance(model, rxnImbal(1), 0, rxnBal, elements, metEle)
-disp(length(rxnImbal)+" reactions were found to be imbalanced after manual intervention.")
+if length(rxnImbal) > 0 
+    printImbalance(model, rxnImbal(1), 0, rxnBal, elements, metEle)
+    disp(length(rxnImbal)+" reactions were found to be imbalanced after manual intervention.")
+else
+    disp("The model is balanced.")
+end
