@@ -20,6 +20,7 @@ rxnEx = sum(model.S ~= 0, 1) <= 1;
 disp(sum(rxnEx == 1)+" transport reactions,")
 %Number of extracellular metabolites
 %disp("and "+...+" extracellular metbolites.")
+
 %% Fixing metCharges, metFormulas, and mets
 [yn, id] = ismember(mets, BiGGmetData(:, 2));
 model.metCharges(yn, 1) = str2double(BiGGmetData(id(yn), 7));
@@ -30,8 +31,10 @@ disp("The model's Charges, metabolite names and formulas were standardized using
 %% Intervention - adding biomass metabolite
 model = addMetabolite(model,'bio[c]','metFormula','','Charge',0.78071,'metName','Biomass');
 model = addMetabolite(model,'bio[e]','metFormula','','Charge',0.78071,'metName','Biomass');
-model = addReaction(model,'bio_ex','reactionFormula','bio[c] -> bio[e]','reactionName','Cell Division');
+model = addReaction(model,'bio_ex','reactionFormula','bio[c] -> bio[e]','reactionName','Cell Division','printLevel',0);
 model.S(1026,1456) = 1;
+disp('A biomass metabolite was added to track growth.')
+
 %% Classifying R and X group containing formulae as unknowns
 %getElementalComposition creates to matrices, elements lists all of the
 %elements in the metabolite(s) examined and metEle lists the number of
@@ -45,7 +48,7 @@ l = length(model.metFormulas(any(metEle(:, genEle), 2)));
 disp(l+" metabolites were identified with R or X in their formula.")
 model.metFormulas(any(metEle(:, genEle), 2)) = {''};
 
-%% Balance check after autocorrect
+%% Balance check before autocorrect
 [model2, metFormulae, elements, metEle, rxnBal, S_fill, solInfo] = computeMetFormulae(model, 'fillMets', {'HCharge1', 'H2O'});
 rxnEx = sum(model.S ~= 0, 1) <= 1;
 rxnActive = model.lb ~= 0 | model.ub ~= 0;
@@ -106,5 +109,5 @@ if length(rxnImbal) > 0
     printImbalance(model, rxnImbal(1), 0, rxnBal, elements, metEle)
     disp(length(rxnImbal)+" reactions were found to be imbalanced after manual intervention.")
 else
-    disp("The model is balanced.")
+    disp("The model was balanced after manual intervention and is saved as model2.")
 end
