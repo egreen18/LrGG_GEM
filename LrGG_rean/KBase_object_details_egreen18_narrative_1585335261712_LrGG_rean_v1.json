@@ -1,0 +1,110 @@
+{
+    "metadata": [
+        [
+            7,
+            "LrGG_rean",
+            "KBaseFBA.FBAModel-12.0",
+            "2020-03-27T19:47:12+0000",
+            1,
+            "egreen18",
+            58513,
+            "egreen18:narrative_1585335261712",
+            "d1478688adb0ff6d4ed7876b6c05d22d",
+            802935,
+            {
+                "Genome": "58513/5/1",
+                "Name": "Lactobacillus rhamnosus GG",
+                "Number biomasses": "1",
+                "Number compartments": "2",
+                "Number compounds": "710",
+                "Number gapfills": "1",
+                "Number gapgens": "0",
+                "Number reactions": "616",
+                "Source": "KBase",
+                "Source ID": "LrGG_rean",
+                "Type": "GenomeScale"
+            }
+        ]
+    ],
+    "provenance": [
+        {
+            "copy_source_inaccessible": 0,
+            "created": "2020-03-27T19:47:11+0000",
+            "creator": "egreen18",
+            "epoch": 1585338431898,
+            "extracted_ids": {},
+            "info": [
+                7,
+                "LrGG_rean",
+                "KBaseFBA.FBAModel-12.0",
+                "2020-03-27T19:47:12+0000",
+                1,
+                "egreen18",
+                58513,
+                "egreen18:narrative_1585335261712",
+                "d1478688adb0ff6d4ed7876b6c05d22d",
+                802935,
+                {
+                    "Genome": "58513/5/1",
+                    "Name": "Lactobacillus rhamnosus GG",
+                    "Number biomasses": "1",
+                    "Number compartments": "2",
+                    "Number compounds": "710",
+                    "Number gapfills": "1",
+                    "Number gapgens": "0",
+                    "Number reactions": "616",
+                    "Source": "KBase",
+                    "Source ID": "LrGG_rean",
+                    "Type": "GenomeScale"
+                }
+            ],
+            "orig_wsid": 58513,
+            "path": [
+                "58513/7/1"
+            ],
+            "provenance": [
+                {
+                    "custom": {},
+                    "external_data": [],
+                    "input_ws_objects": [],
+                    "method": "build_metabolic_model",
+                    "method_params": [
+                        {
+                            "activation_coefficient": 0.5,
+                            "comprehensive_gapfill": 0,
+                            "coremodel": 0,
+                            "custom_bound_list": [],
+                            "exp_threshold_margin": 0.1,
+                            "exp_threshold_percentile": 0.5,
+                            "expression_condition": null,
+                            "expseries_id": null,
+                            "expseries_workspace": "egreen18:narrative_1585335261712",
+                            "fbamodel_output_id": "LrGG_rean",
+                            "gapfill_model": 1,
+                            "genome_id": "58513/5/1",
+                            "genome_workspace": "egreen18:narrative_1585335261712",
+                            "media_id": null,
+                            "media_supplement_list": "",
+                            "media_workspace": "egreen18:narrative_1585335261712",
+                            "minimum_target_flux": 0.1,
+                            "number_of_solutions": 1,
+                            "objective_fraction": 0.1,
+                            "omega": 0,
+                            "template_id": "NewKBaseModelTemplates/GramNegModelTemplate",
+                            "template_workspace": null,
+                            "thermodynamic_constraints": 0,
+                            "workspace": "egreen18:narrative_1585335261712"
+                        }
+                    ],
+                    "resolved_ws_objects": [],
+                    "service": "fba_tools",
+                    "subactions": []
+                }
+            ],
+            "refs": [
+                "58513/5/1",
+                "262/34/1"
+            ]
+        }
+    ]
+}
